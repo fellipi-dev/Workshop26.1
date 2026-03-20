@@ -1,0 +1,55 @@
+USE ads;
+
+-- Criação da tabela
+CREATE TABLE livros (
+    cod_livro INT NOT NULL,
+    nome VARCHAR(30),
+    preco DECIMAL(10,2) NOT NULL,
+    categoria VARCHAR(20) NOT NULL,
+    PRIMARY KEY (cod_livro)
+);
+
+-- Adicionando coluna paginas
+ALTER TABLE livros
+ADD COLUMN paginas INT;
+
+-- Inserindo um registro
+INSERT INTO livros (cod_livro, nome, preco, categoria)
+VALUES (111111, 'Verity', 39.90, 'Suspense');
+
+-- Atualizando o registro
+UPDATE livros
+SET preco = 49.90,
+    categoria = 'Romance'
+WHERE cod_livro = 111111;
+
+-- (Opcional) Remover o registro
+-- DELETE FROM livros
+-- WHERE cod_livro = 111111;
+
+-- Consultando todos os dados
+SELECT * FROM livros;
+
+-- Total de livros
+SELECT COUNT(*) AS total_livros
+FROM livros;
+
+-- Média de preço
+SELECT AVG(preco) AS media_preco
+FROM livros;
+
+-- Maior e menor preço
+SELECT MAX(preco) AS maior_preco,
+       MIN(preco) AS menor_preco
+FROM livros;
+
+-- Quantidade por categoria
+SELECT categoria, COUNT(*) AS total
+FROM livros
+GROUP BY categoria;
+
+-- Categorias com mais de 1 livro
+SELECT categoria, COUNT(*) AS total
+FROM livros
+GROUP BY categoria
+HAVING COUNT(*) > 1;
