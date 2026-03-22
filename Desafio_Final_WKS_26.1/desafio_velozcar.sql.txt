@@ -1,0 +1,206 @@
+CREATE SCHEMA velozcar_final;
+USE velozcar_final;
+
+
+CREATE TABLE cliente (
+    id_cliente INT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    cpf VARCHAR(14) NOT NULL UNIQUE,
+    data_nascimento DATE NOT NULL,
+    telefone VARCHAR(20) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    endereco VARCHAR(150) NOT NULL,
+    data_cadastro DATE NOT NULL
+);
+
+
+CREATE TABLE funcionario (
+    id_funcionario INT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    cpf VARCHAR(14) NOT NULL UNIQUE,
+    cargo VARCHAR(50) NOT NULL,
+    telefone VARCHAR(20) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    salario DECIMAL(10,2) NOT NULL,
+    data_admissao DATE NOT NULL
+);
+
+
+CREATE TABLE veiculo (
+    id_veiculo INT PRIMARY KEY,
+    placa VARCHAR(10) NOT NULL UNIQUE,
+    modelo VARCHAR(50) NOT NULL,
+    marca VARCHAR(50) NOT NULL,
+    cor VARCHAR(30) NOT NULL,
+    ano_fabricacao INT NOT NULL,
+    valor_diaria DECIMAL(10,2) NOT NULL,
+    status VARCHAR(20) NOT NULL
+);
+
+
+CREATE TABLE aluguel (
+    id_aluguel INT PRIMARY KEY,
+    data_inicio DATE NOT NULL,
+    data_fim DATE NOT NULL,
+    valor_total DECIMAL(10,2) NOT NULL,
+    status VARCHAR(20) NOT NULL,
+    km_inicial INT NOT NULL,
+    km_final INT,
+    id_cliente INT NOT NULL,
+    id_funcionario INT NOT NULL,
+    id_veiculo INT NOT NULL,
+
+    FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente),
+    FOREIGN KEY (id_funcionario) REFERENCES funcionario(id_funcionario),
+    FOREIGN KEY (id_veiculo) REFERENCES veiculo(id_veiculo)
+);
+
+
+CREATE TABLE pagamento (
+    id_pagamento INT PRIMARY KEY,
+    valor_pagamento DECIMAL(10,2) NOT NULL,
+    data_pagamento DATE NOT NULL,
+    metodo_pagamento VARCHAR(20) NOT NULL,
+    status_pagamento VARCHAR(20) NOT NULL,
+    desconto DECIMAL(10,2),
+    multa DECIMAL(10,2),
+    id_aluguel INT NOT NULL UNIQUE,
+
+    FOREIGN KEY (id_aluguel) REFERENCES aluguel(id_aluguel)
+);
+
+
+CREATE TABLE manutencao (
+    id_manutencao INT PRIMARY KEY,
+    descricao_servico VARCHAR(200) NOT NULL,
+    custo DECIMAL(10,2) NOT NULL,
+    data_manutencao DATE NOT NULL,
+    responsavel VARCHAR(100) NOT NULL,
+    tipo_manutencao VARCHAR(50) NOT NULL,
+    status_manutencao VARCHAR(20) NOT NULL,
+    id_veiculo INT NOT NULL,
+
+    FOREIGN KEY (id_veiculo) REFERENCES veiculo(id_veiculo)
+);
+
+
+INSERT INTO cliente VALUES
+(1,'Joao Silva','111.111.111-01','1995-05-10','8399991001','joao@email.com','Rua A','2025-01-10'),
+(2,'Maria Souza','111.111.111-02','1998-07-21','8399991002','maria@email.com','Rua B','2025-01-11'),
+(3,'Carlos Lima','111.111.111-03','1992-09-15','8399991003','carlos@email.com','Rua C','2025-01-12'),
+(4,'Ana Costa','111.111.111-04','2000-01-02','8399991004','ana@email.com','Rua D','2025-01-13'),
+(5,'Lucas Alves','111.111.111-05','1997-03-30','8399991005','lucas@email.com','Rua E','2025-01-14'),
+(6,'Fernanda Rocha','111.111.111-06','1994-06-18','8399991006','fernanda@email.com','Rua F','2025-01-15'),
+(7,'Rafael Martins','111.111.111-07','1993-11-11','8399991007','rafael@email.com','Rua G','2025-01-16'),
+(8,'Juliana Santos','111.111.111-08','1999-12-25','8399991008','juliana@email.com','Rua H','2025-01-17'),
+(9,'Bruno Melo','111.111.111-09','1996-08-08','8399991009','bruno@email.com','Rua I','2025-01-18'),
+(10,'Patricia Gomes','111.111.111-10','1991-04-04','8399991010','patricia@email.com','Rua J','2025-01-19');
+
+
+INSERT INTO funcionario VALUES
+(1,'Ricardo Nunes','222.222.222-01','Atendente','8398882001','ricardo@veloz.com',2500,'2024-01-01'),
+(2,'Paula Lima','222.222.222-02','Gerente','8398882002','paula@veloz.com',4800,'2023-05-10'),
+(3,'Bruno Henrique','222.222.222-03','Atendente','8398882003','bruno@veloz.com',2600,'2024-02-15'),
+(4,'Larissa Gomes','222.222.222-04','Financeiro','8398882004','larissa@veloz.com',3200,'2023-10-01'),
+(5,'Eduardo Silva','222.222.222-05','Mecanico','8398882005','eduardo@veloz.com',3500,'2022-08-20'),
+(6,'Camila Barros','222.222.222-06','Atendente','8398882006','camila@veloz.com',2550,'2024-04-01'),
+(7,'Sergio Oliveira','222.222.222-07','Mecanico','8398882007','sergio@veloz.com',3600,'2022-12-12'),
+(8,'Patricia Lima','222.222.222-08','Financeiro','8398882008','patricia@veloz.com',3300,'2023-08-18'),
+(9,'Gustavo Araujo','222.222.222-09','Supervisor','8398882009','gustavo@veloz.com',4200,'2023-02-27'),
+(10,'Renata Freitas','222.222.222-10','Atendente','8398882010','renata@veloz.com',2700,'2024-07-01');
+
+
+INSERT INTO veiculo VALUES
+(1,'AAA1111','Onix','Chevrolet','Prata',2022,120,'disponivel'),
+(2,'BBB2222','HB20','Hyundai','Branco',2021,115,'disponivel'),
+(3,'CCC3333','Argo','Fiat','Preto',2023,130,'alugado'),
+(4,'DDD4444','Ka','Ford','Vermelho',2020,105,'manutencao'),
+(5,'EEE5555','Cronos','Fiat','Cinza',2022,125,'disponivel'),
+(6,'FFF6666','Gol','VW','Branco',2019,98,'disponivel'),
+(7,'GGG7777','Pulse','Fiat','Azul',2024,160,'alugado'),
+(8,'HHH8888','208','Peugeot','Prata',2023,140,'disponivel'),
+(9,'III9999','Sandero','Renault','Preto',2021,110,'manutencao'),
+(10,'JJJ0000','Corolla','Toyota','Branco',2024,220,'disponivel');
+
+
+INSERT INTO aluguel VALUES
+(1,'2025-02-10','2025-02-13',360,'finalizado',10000,10500,1,1,1),
+(2,'2025-02-12','2025-02-15',345,'finalizado',20000,20500,2,3,2),
+(3,'2025-02-18','2025-02-22',520,'finalizado',5000,5600,3,6,3),
+(4,'2025-02-20','2025-02-23',375,'finalizado',15000,15500,4,10,5),
+(5,'2025-02-25','2025-02-28',294,'finalizado',30000,30400,5,1,6),
+(6,'2025-03-01','2025-03-04',480,'finalizado',4000,4500,6,3,7),
+(7,'2025-03-03','2025-03-06',420,'finalizado',8000,8600,7,6,8),
+(8,'2025-03-05','2025-03-08',660,'finalizado',1000,1600,8,10,10),
+(9,'2025-03-10','2025-03-13',390,'ativo',9000,NULL,9,1,3),
+(10,'2025-03-14','2025-03-17',480,'atrasado',2000,NULL,10,6,7);
+
+
+INSERT INTO pagamento VALUES
+(1,360,'2025-02-10','pix','concluido',0,0,1),
+(2,345,'2025-02-12','cartao','concluido',0,0,2),
+(3,500,'2025-02-18','boleto','concluido',20,0,3),
+(4,375,'2025-02-20','pix','concluido',0,0,4),
+(5,294,'2025-02-25','cartao','concluido',0,0,5),
+(6,480,'2025-03-01','pix','concluido',0,0,6),
+(7,420,'2025-03-03','cartao','concluido',0,0,7),
+(8,660,'2025-03-05','boleto','pendente',0,0,8),
+(9,390,'2025-03-10','pix','pendente',0,0,9),
+(10,450,'2025-03-14','cartao','pendente',0,30,10);
+
+
+INSERT INTO manutencao VALUES
+(1,'Troca de oleo',300,'2025-01-10','Eduardo','preventiva','concluida',1),
+(2,'Alinhamento',180,'2025-01-12','Sergio','preventiva','concluida',2),
+(3,'Revisao geral',600,'2025-01-15','Eduardo','preventiva','concluida',3),
+(4,'Freios',400,'2025-02-01','Sergio','corretiva','andamento',4),
+(5,'Limpeza interna',150,'2025-02-03','Eduardo','preventiva','concluida',5),
+(6,'Troca de pneus',900,'2025-02-07','Sergio','corretiva','concluida',6),
+(7,'Revisao 10k km',500,'2025-02-10','Eduardo','preventiva','concluida',7),
+(8,'Bateria',550,'2025-02-14','Sergio','corretiva','concluida',8),
+(9,'Correia',700,'2025-02-20','Eduardo','corretiva','agendada',9),
+(10,'Polimento',850,'2025-02-25','Sergio','estetica','concluida',10);
+
+
+UPDATE veiculo
+SET status = 'disponivel'
+WHERE id_veiculo = 4;
+
+UPDATE aluguel
+SET status = 'finalizado'
+WHERE data_fim < '2025-03-01';
+
+
+SELECT status, COUNT(*) FROM veiculo GROUP BY status;
+
+SELECT marca, AVG(valor_diaria) FROM veiculo GROUP BY marca;
+
+SELECT cargo, COUNT(*) FROM funcionario GROUP BY cargo;
+
+SELECT cargo, AVG(salario) FROM funcionario GROUP BY cargo;
+
+SELECT status, COUNT(*) FROM aluguel GROUP BY status;
+
+SELECT id_cliente, SUM(valor_total) AS total_gasto
+FROM aluguel
+GROUP BY id_cliente;
+
+-- =========================
+-- JOINS
+-- =========================
+SELECT c.nome, a.id_aluguel, v.modelo
+FROM aluguel a
+JOIN cliente c ON a.id_cliente = c.id_cliente
+JOIN veiculo v ON a.id_veiculo = v.id_veiculo;
+
+SELECT f.nome, COUNT(a.id_aluguel) AS total_atendimentos
+FROM funcionario f
+LEFT JOIN aluguel a ON f.id_funcionario = a.id_funcionario
+GROUP BY f.nome;
+
+SELECT c.nome, SUM(p.valor_pagamento) AS total_pago
+FROM cliente c
+JOIN aluguel a ON c.id_cliente = a.id_cliente
+JOIN pagamento p ON a.id_aluguel = p.id_aluguel
+GROUP BY c.nome
+ORDER BY total_pago DESC;
